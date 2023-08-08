@@ -102,3 +102,31 @@ app.get('/ingredients/:name/fda-limit', (req, res) => {
         res.status(500).json({mssg: "Error connecting to db", error: err.message});
     });
 });
+
+app.post('/users', (req, res) => {
+    const user = req.body
+    db.collection('users')
+    .insertOne(user)
+    .then(result => {
+        res.status(200).json(result)
+    })
+    .catch(err => {
+        res.status(500).json({mssg: "Error connecting to db", error: err.message})
+    })
+})
+
+app.get('/users/:url', (req, res) => {
+    db.collection('users')
+    .findOne({url: req.params.url})  // Look for the 'url' field
+    .then(user => {
+        if (user) {
+            const ingredients = user.ingredients;  // Extract ingredients from the user object
+            res.status(200).json({ingredients: ingredients});
+        } else {
+            res.status(404).json({mssg: "User not found"});
+        }
+    })
+    .catch(err => {
+        res.status(500).json({mssg: "Error connecting to db", error: err.message});
+    });
+});
