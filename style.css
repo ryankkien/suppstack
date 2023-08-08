@@ -213,7 +213,7 @@ progress.exceeded::-webkit-progress-value {
 }
 
 #supplementName {
-    width: 300px /* Or whatever width you want */
+    width: 100%; /* Or whatever width you want */
 }
 
 #suggestionBox {
