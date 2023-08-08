@@ -167,10 +167,6 @@ function addSupplement(event) {
   supplementUnit.value = '';
 }
 
-
-
-
-
 function updateSupplementList() {
     const supplementContainer = document.getElementById('supplementContainer');
     supplementContainer.innerHTML = '';
@@ -263,3 +259,36 @@ document.body.onclick = function(event) {
     const isClickInside = document.getElementById('popup').contains(event.target);
     if (!isClickInside) closePopup();
 };
+
+document.getElementById('ShareButton').addEventListener('click', function() {
+  const shareInputContainer = document.getElementById('shareInputContainer');
+  shareInputContainer.classList.remove('hidden');
+});
+
+document.getElementById('submitButton').addEventListener('click', function() {
+  const username = document.getElementById('usernameInput').value;
+  if (username) {
+      // Make a POST request with the username (or any other action you want to perform)
+      postDataToServer(username);
+  } else {
+      alert("Please enter a username!");
+  }
+});
+
+function postDataToServer(username) {
+  // Example of sending the username to a server endpoint
+  fetch('http://localhost:3000/share', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ username: username })
+  })
+  .then(response => response.json())
+  .then(data => {
+      console.log(data);  // Process the response if needed
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}

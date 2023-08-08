@@ -117,10 +117,9 @@ app.post('/users', (req, res) => {
 
 app.get('/users/:url', (req, res) => {
     db.collection('users')
-    .findOne({url: req.params.url})  // Look for the 'url' field
+    .findOne({name: req.params.url})
     .then(user => {
         if (user) {
-            const ingredients = user.ingredients;  // Extract ingredients from the user object
             res.status(200).json({ingredients: ingredients});
         } else {
             res.status(404).json({mssg: "User not found"});
