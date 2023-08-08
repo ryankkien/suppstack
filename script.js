@@ -253,7 +253,6 @@ function updateSupplementList() {
         
     } 
     document.getElementById('downloadTableButton').style.visibility = 'visible';
-    document.getElementById('GetStarted').style.visibility = 'hidden';
     table.appendChild(tbody);
     supplementContainer.appendChild(table);
 }
