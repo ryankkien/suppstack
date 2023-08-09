@@ -8,7 +8,6 @@ window.onload = function() {
     .then(response => response.json())
     .then(data => {
       validInputs = data.map(ingredient => ingredient.name);
-      console.log(validInputs) // move console.log here
     })
     .catch(error => console.error('Error:', error));
   document.getElementById('addSupplementButton').addEventListener('click', function(event) {
@@ -118,7 +117,7 @@ document.getElementById('supplementName').addEventListener('input', function() {
 });
 //OCR
 // Add event listener to the file input
-document.getElementById('fileUploader').addEventListener('change', runOCR);
+// document.getElementById('fileUploader').addEventListener('change', runOCR);
 
 // // Define the OCR function
 // function runOCR(event) {

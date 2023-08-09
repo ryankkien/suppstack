@@ -119,7 +119,7 @@ document.getElementById('supplementName').addEventListener('input', function() {
 });
 //OCR
 // Add event listener to the file input
-document.getElementById('fileUploader').addEventListener('change', runOCR);
+// document.getElementById('fileUploader').addEventListener('change', runOCR);
 
 // // Define the OCR function
 // function runOCR(event) {
