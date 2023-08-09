@@ -252,3 +252,7 @@ progress.exceeded::-webkit-progress-value {
 td{
     text-align: center;
 }
+
+#ShareButton{
+    visibility: hidden;
+}

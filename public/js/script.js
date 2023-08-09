@@ -247,6 +247,7 @@ function updateSupplementList() {
         tbody.appendChild(row);
         
     } 
+    document.getElementById('ShareButton').style.visibility = 'visible';
     document.getElementById('downloadTableButton').style.visibility = 'visible';
     table.appendChild(tbody);
     supplementContainer.appendChild(table);
@@ -260,9 +261,46 @@ document.body.onclick = function(event) {
 };
 
 document.getElementById('ShareButton').addEventListener('click', function() {
-    const shareInputContainer = document.getElementById('shareInputContainer');
-    shareInputContainer.classList.remove('hidden');
+  // Show the modal
+  document.getElementById('shareModal').style.display = "block";
 });
+
+// document.getElementById('submitShare').addEventListener('click', function() {
+//   // Gather the link name
+//   const linkName = document.getElementById('linkName').value;
+
+//   // Assuming your supplements are stored in the 'supplements' array (as in your previous code)
+//   const ingredients = {};
+//   supplements.forEach(supplement => {
+//       ingredients[supplement.name] = supplement.amount;
+//   });
+
+//   // Create the data object to send
+//   const data = {
+//       url: linkName,
+//       ingredients: ingredients
+//       // Add fdaLimits if you wish to send them as well
+//   };
+
+//   // Send the data using a POST request
+//   fetch('http://localhost:3000/users', {
+//       method: 'POST',
+//       headers: {
+//           'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(data)
+//   })
+//   .then(response => response.json())
+//   .then(responseData => {
+//       // Handle response, maybe close the modal and show a success message
+//       document.getElementById('shareModal').style.display = "none";
+//       alert('Shared successfully!');
+//   })
+//   .catch(error => {
+//       console.error('Error:', error);
+//   });
+// });
+
 
 document.getElementById('submitButton').addEventListener('click', function() {
     const username = document.getElementById('usernameInput').value;
@@ -274,20 +312,56 @@ document.getElementById('submitButton').addEventListener('click', function() {
     }
 });
 
-// function postDataToServer(username) {
-//     // Example of sending the username to a server endpoint
-//     fetch('http://localhost:3000/share', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify({ username: username })
-//     })
-//     .then(response => response.json())
-//     .then(data => {
-//         console.log(data);  // Process the response if needed
-//     })
-//     .catch(error => {
-//         console.error('Error:', error);
-//     });
-// }
+
+document.getElementById('submitShare').addEventListener('click', function() {
+  // Gather the link name
+  const linkName = document.getElementById('linkName').value;
+
+  // Check if the link name is already taken
+  fetch(`http://localhost:3000/users/${linkName}`)
+  .then(response => {
+      if (response.status === 404) {
+          // Name is not taken, proceed to share
+          shareSupplementStack(linkName);
+      } else {
+          // Name is taken, show an error message
+          alert('This link name is already taken. Please choose another one.');
+      }
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+});
+
+function shareSupplementStack(linkName) {
+  // Assuming your supplements are stored in the 'supplements' array (as in your previous code)
+  const ingredients = {};
+  supplements.forEach(supplement => {
+      ingredients[supplement.name] = supplement.amount;
+  });
+
+  // Create the data object to send
+  const data = {
+      url: linkName,
+      ingredients: ingredients
+      // Add fdaLimits if you wish to send them as well
+  };
+
+  // Send the data using a POST request
+  fetch('http://localhost:3000/users', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(responseData => {
+      // Handle response, maybe close the modal and show a success message
+      document.getElementById('shareModal').style.display = "none";
+      alert('Shared successfully!');
+  })
+  .catch(error => {
+      console.error('Error:', error);
+  });
+}

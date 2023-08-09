@@ -245,6 +245,10 @@ progress.exceeded::-webkit-progress-value {
     margin: 0px 5px; 
 }
 
+#ShareButton{
+    visibility: hidden;
+}
+
 #downloadTableButton{
     visibility: hidden; 
 }
