@@ -10,6 +10,7 @@
             <tr>
                 <th>Supplement</th>
                 <th>Amount</th>
+                <th>FDA Limit (%)</th>
             </tr>
         </thead>
         <tbody>
@@ -17,9 +18,17 @@
                 <tr>
                     <td><%= supplement %></td>
                     <td><%= user.ingredients[supplement] %></td>
+                    <td>
+                        <% let percentage = 0; %>
+                        <% if(fdaLimits && fdaLimits[supplement]) { %>
+                            <% percentage = (user.ingredients[supplement] / fdaLimits[supplement]) * 100; %>
+                        <% } %>
+                        <progress value="<%= percentage %>" max="100"></progress>
+                    </td>
                 </tr>
             <% } %>
         </tbody>
     </table>
+    
     <script src="/js/users.js"></script>
 </div>

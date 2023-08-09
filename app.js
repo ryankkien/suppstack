@@ -150,16 +150,23 @@ app.get('/users/:url', (req, res) => {
 // });
 
 app.get('/:username', (req, res) => {
-    // Fetch user data based on the username from the URL
     const username = req.params.username;
     db.collection('users')
     .findOne({url: username})
     .then(user => {
         if (user) {
-            // Render a user-specific page with their supplement stack
-            res.render('users.ejs', { user: user });
+            // Fetch FDA limits for all the supplements in the user's list
+            const supplementNames = Object.keys(user.ingredients);
+            return db.collection('ingredients').find({name: {$in: supplementNames}}).toArray()
+            .then(fdaLimitsArray => {
+                // Convert the array to a dictionary for easier use in the template
+                const fdaLimits = {};
+                fdaLimitsArray.forEach(limit => {
+                    fdaLimits[limit.name] = limit.FDA_limit;  
+                });
+                res.render('users', { user: user, fdaLimits: fdaLimits });
+            });
         } else {
-            // Handle user not found - perhaps redirect to a 404 page
             res.status(404).send('User not found');
         }
     })
