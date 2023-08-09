@@ -1,7 +1,22 @@
-<h1>Welcome, <%= user.url %></h1>
-<h2>Your Supplements:</h2>
-<ul>
-    <% for(let supplement in user.ingredients) { %>
-        <li><%= supplement %>: <%= user.ingredients[supplement] %></li>
-    <% } %>
-</ul>
+<link rel="stylesheet" type="text/css" href="/css/styles.css">
+<h1 class="header">Welcome, <%= user.url %></h1>
+
+<div class="supplementContainer">
+    <h2 class="header">Your Supplements:</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Supplement</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let supplement in user.ingredients) { %>
+                <tr>
+                    <td><%= supplement %></td>
+                    <td><%= user.ingredients[supplement] %></td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>
