@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path');
 const {ObjectId} = require('mongodb')
 const { connectToDb, getDb } = require('./db')
 const cors = require('cors');
@@ -7,8 +8,15 @@ const cors = require('cors');
 const app = express()
 app.use(express.json())
 app.use(cors());  // Enable CORS
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 //db connection
 let db
+
+app.get('/', (req, res) => {
+    res.render('homepage.ejs');
+});
 
 connectToDb((err) => {
     if(!err){
@@ -19,7 +27,7 @@ connectToDb((err) => {
     }
 })
 //middleware
-
+app.use(express.static(path.join(__dirname, 'public')));
 
 //routes
 app.get('/ingredients', (req, res) => {
@@ -130,13 +138,13 @@ app.get('/users/:url', (req, res) => {
     });
 });
 
-app.get('/api/users', (req, res) => {
-    db.collection('users')
-    .find({})
-    .toArray((err, users) => {
-        if (err) {
-            return res.status(500).json({mssg: "Error connecting to db", error: err.message});
-        }
-        res.status(200).json(users);
-    });
-});
+// app.get('/users', (req, res) => {
+//     db.collection('users')
+//     .find({})
+//     .toArray((err, users) => {
+//         if (err) {
+//             return res.status(500).json({mssg: "Error connecting to db", error: err.message});
+//         }
+//         res.status(200).json(users);
+//     });
+// });

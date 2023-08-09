@@ -6,7 +6,7 @@ let supplements = [];
 
 // Fetch the valid inputs from the server when the page loads.
 window.onload = function() {
-    fetch('localhost:3000/users')
+    fetch('/users')
     .then(response => response.json())
     .then(user => {
         if (user && user.ingredients) {
@@ -16,13 +16,6 @@ window.onload = function() {
     .catch(error => {
         console.error('Error fetching users:', error);
     });
-
-  document.getElementById('closePopupButton').addEventListener('click', function(event) {
-    event.stopPropagation();
-    closePopup();
-  });
-
-  document.getElementById('addSupplementForm').addEventListener('submit', addSupplement);
 }
 
 
