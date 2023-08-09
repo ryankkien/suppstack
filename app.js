@@ -117,15 +117,26 @@ app.post('/users', (req, res) => {
 
 app.get('/users/:url', (req, res) => {
     db.collection('users')
-    .findOne({name: req.params.url})
+    .findOne({url: req.params.url})  // Search based on the 'url' field
     .then(user => {
         if (user) {
-            res.status(200).json({ingredients: ingredients});
+            res.status(200).json({ingredients: user.ingredients});  // Send the 'ingredients' of the 'user' object
         } else {
             res.status(404).json({mssg: "User not found"});
         }
     })
     .catch(err => {
         res.status(500).json({mssg: "Error connecting to db", error: err.message});
+    });
+});
+
+app.get('/api/users', (req, res) => {
+    db.collection('users')
+    .find({})
+    .toArray((err, users) => {
+        if (err) {
+            return res.status(500).json({mssg: "Error connecting to db", error: err.message});
+        }
+        res.status(200).json(users);
     });
 });

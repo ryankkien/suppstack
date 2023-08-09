@@ -2,19 +2,20 @@ let isPopupOpen = false;
 let validInputs = [];
 let supplements = [];
 
+
+
 // Fetch the valid inputs from the server when the page loads.
 window.onload = function() {
-  fetch('http://localhost:3000/ingredients/')
+    fetch('localhost:3000/users')
     .then(response => response.json())
-    .then(data => {
-      validInputs = data.map(ingredient => ingredient.name);
-      console.log(validInputs) // move console.log here
+    .then(user => {
+        if (user && user.ingredients) {
+            updateSupplementList(user.ingredients);
+        }
     })
-    .catch(error => console.error('Error:', error));
-  document.getElementById('addSupplementButton').addEventListener('click', function(event) {
-    event.stopPropagation();
-    openPopup();
-  });
+    .catch(error => {
+        console.error('Error fetching users:', error);
+    });
 
   document.getElementById('closePopupButton').addEventListener('click', function(event) {
     event.stopPropagation();
@@ -139,140 +140,50 @@ document.getElementById('fileUploader').addEventListener('change', runOCR);
 // }
 
 // Function to add a new supplement
-function addSupplement(event) {
-  event.preventDefault();
 
-  let supplementName = document.getElementById('supplementName');
-  let supplementAmount = document.getElementById('supplementAmount');
-  let supplementUnit = document.getElementById('supplementUnit');
 
-  // Check if the entered supplement name is valid
-  if (!validInputs.includes(supplementName.value)) {
-    alert('Please enter a valid supplement name from the suggestions.');
-    return;  // Stop the function if the name is not valid
-  }
+const supplementContainer = document.getElementById('supplementContainer');
+supplementContainer.innerHTML = '';
 
-  let supplement = {
-    name: supplementName.value,
-    amount: supplementAmount.value,
-    unit: supplementUnit.value
-  };
-  
-  supplements.push(supplement);
-  updateSupplementList();
+const table = document.createElement('table');
+const thead = document.createElement('thead');
+const tbody = document.createElement('tbody');
+const headerRow = document.createElement('tr');
+const headerName = document.createElement('th');
+const headerAmount = document.createElement('th');
 
-  // Clear the input fields
-  supplementName.value = '';
-  supplementAmount.value = '';
-  supplementUnit.value = '';
+headerName.textContent = 'Supplement';
+headerAmount.textContent = 'Amount';
+
+headerRow.appendChild(headerName);
+headerRow.appendChild(headerAmount);
+
+thead.appendChild(headerRow);
+table.appendChild(thead);
+
+for (const [name, amount] of Object.entries(ingredientsData)) {
+    const row = document.createElement('tr');
+    const nameCell = document.createElement('td');
+    const amountCell = document.createElement('td');
+
+    nameCell.textContent = name;
+    amountCell.textContent = `${amount}`;
+
+    row.appendChild(nameCell);
+    row.appendChild(amountCell);
+
+    tbody.appendChild(row);
 }
 
-function updateSupplementList() {
-    const supplementContainer = document.getElementById('supplementContainer');
-    supplementContainer.innerHTML = '';
-
-    const table = document.createElement('table');
-    const thead = document.createElement('thead');
-    const tbody = document.createElement('tbody');
-    const headerRow = document.createElement('tr');
-    const headerName = document.createElement('th');
-    const headerAmount = document.createElement('th');
-    const headerFDALimit = document.createElement('th');
-
-    headerName.textContent = 'Supplement';
-    headerAmount.textContent = 'Amount';
-    headerFDALimit.textContent = 'FDA Limit (%)';
-
-    headerRow.appendChild(headerName);
-    headerRow.appendChild(headerAmount);
-    headerRow.appendChild(headerFDALimit);
-
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
-
-    for (const supplement of supplements) {
-        const row = document.createElement('tr');
-        const nameCell = document.createElement('td');
-        const amountCell = document.createElement('td');
-        const fdaLimitCell = document.createElement('td');
-
-        const supplementNameLink = document.createElement('a');
-        supplementNameLink.href = 'https://examine.com/search/?q=' + encodeURIComponent(supplement.name);
-        supplementNameLink.textContent = supplement.name;
-        supplementNameLink.target = '_blank';
-
-        supplementNameLink.addEventListener('mouseover', function() {
-            fetch('http://localhost:3000/ingredients/' + encodeURIComponent(supplement.name))
-            .then(response => response.json())
-            .then(data => {
-                // Display the fetched data in a tooltip
-                supplementNameLink.title = data.description;
-            })
-            .catch(error => console.error('Error:', error));
-        });
-
-        nameCell.appendChild(supplementNameLink);
-        nameCell.appendChild(supplementNameLink);
-        amountCell.textContent = `${supplement.amount} ${supplement.unit}`;
-
-        // Create a progress bar
-        const progressBar = document.createElement('progress');
-        progressBar.max = 100;  // Set the max value to 100 to represent 100%
-
-        fetch('http://localhost:3000/ingredients/' + encodeURIComponent(supplement.name) + '/fda-limit')
-        .then(response => response.json())
-        .then(data => {
-            if (data.FDA_limit !== null) {
-                let percentage = (supplement.amount / data.FDA_limit) * 100;
-                progressBar.value = percentage <= 100 ? percentage : 100; // Limit the progress bar to 100
-
-                progressBar.title = `${supplement.amount} / ${data.FDA_limit}`;
-
-                // If the calculated percentage is 100 or more, add the 'exceeded' class
-                if (percentage >= 100) {
-                    progressBar.classList.add('exceeded');
-                }
-
-                fdaLimitCell.appendChild(progressBar);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+table.appendChild(tbody);
+supplementContainer.appendChild(table);
 
 
-        fdaLimitCell.appendChild(progressBar);
 
-        row.appendChild(nameCell);
-        row.appendChild(amountCell);
-        row.appendChild(fdaLimitCell);
-
-        tbody.appendChild(row);
-        
-    } 
-    document.getElementById('downloadTableButton').style.visibility = 'visible';
-    table.appendChild(tbody);
-    supplementContainer.appendChild(table);
-}
-
-
-document.body.onclick = function(event) {
-    if (!isPopupOpen) return;
-    const isClickInside = document.getElementById('popup').contains(event.target);
-    if (!isClickInside) closePopup();
-};
 
 document.getElementById('ShareButton').addEventListener('click', function() {
     const shareInputContainer = document.getElementById('shareInputContainer');
     shareInputContainer.classList.remove('hidden');
-});
-
-document.getElementById('submitButton').addEventListener('click', function() {
-    const username = document.getElementById('usernameInput').value;
-    if (username) {
-        // Make a POST request with the username (or any other action you want to perform)
-        postDataToServer(username);
-    } else {
-        alert("Please enter a username!");
-    }
 });
 
 // function postDataToServer(username) {
