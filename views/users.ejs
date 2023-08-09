@@ -1,0 +1,7 @@
+<h1>Welcome, <%= user.url %></h1>
+<h2>Your Supplements:</h2>
+<ul>
+    <% for(let supplement in user.ingredients) { %>
+        <li><%= supplement %>: <%= user.ingredients[supplement] %></li>
+    <% } %>
+</ul>

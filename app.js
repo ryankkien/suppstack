@@ -148,3 +148,22 @@ app.get('/users/:url', (req, res) => {
 //         res.status(200).json(users);
 //     });
 // });
+
+app.get('/:username', (req, res) => {
+    // Fetch user data based on the username from the URL
+    const username = req.params.username;
+    db.collection('users')
+    .findOne({url: username})
+    .then(user => {
+        if (user) {
+            // Render a user-specific page with their supplement stack
+            res.render('users.ejs', { user: user });
+        } else {
+            // Handle user not found - perhaps redirect to a 404 page
+            res.status(404).send('User not found');
+        }
+    })
+    .catch(err => {
+        res.status(500).json({mssg: "Error connecting to db", error: err.message});
+    });
+});
