@@ -106,7 +106,6 @@
                   // Set the unit of the supplement
                   let supplementUnit = document.getElementById('supplementUnit');
                   supplementUnit.value = data.unit;
-                  supplementUnit.disabled = true;
                 })
                 .catch(error => console.error('Error:', error));
                 suggestionBox.innerHTML = '';
@@ -328,3 +327,4 @@
     event.stopPropagation();
     document.getElementById('shareModal').style.display = "none";
 });
+
