@@ -36,8 +36,11 @@
         let ctx = newCanvas.getContext('2d');
 
         // Draw a white rectangle
-        ctx.fillStyle = '#F7F7F';
+        ctx.globalCompositeOperation = 'destination-over';
+        scale = 3;
+        ctx.fillStyle = '#ffffff';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.globalCompositeOperation = 'source-over';
 
         // Draw the original canvas onto the new one
         ctx.drawImage(canvas, 0, 0);
