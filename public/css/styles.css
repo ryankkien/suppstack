@@ -256,3 +256,18 @@ td{
 #ShareButton{
     visibility: hidden;
 }
+
+#linkName, span {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.url-container {
+    margin-top: 20%;
+    display: flex;
+    align-items: center;
+}
+
+.url-container span {
+    margin-right: 5px;  /* This gives a little space between the span and the input */
+}

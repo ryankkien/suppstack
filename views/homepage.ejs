@@ -10,7 +10,11 @@
     </div>
     <div id="root">
         <div id="shareModal" class="popup hidden">
-            Enter your link name: <input type="text" id="linkName">
+            <button id="closeShareModalButton" class="close-btn">Close</button>
+            <div class="url-container">
+                <span>suppstack.io/</span>
+                <input type="text" id="linkName" placeholder="subdomain">
+            </div>
             <button id="submitShare">Share</button>
         </div>
         <div class="center">
@@ -19,10 +23,6 @@
                 <button id="addSupplementButton">Add Supplement</button>
                 <button id="downloadTableButton">Download Table</button>
                 <button id="ShareButton">Share</button>
-                <div id="shareInputContainer" class="hidden">
-                    <input type="text" id="usernameInput" placeholder="Enter username">
-                    <button id="submitButton">Submit</button>
-                </div>
             </div>            
             <!-- <input type="file" id="fileUploader" /> -->
             <div id="popup" class="popup hidden">
@@ -47,7 +47,7 @@
             <div id="supplementContainer"></div>
         </div>
     </div>
-    <!-- <script src='https://cdn.rawgit.com/naptha/tesseract.js/1.0.10/dist/tesseract.js'></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.js"></script>
     <script src="/js/script.js"></script>
 </body>
 </html>
